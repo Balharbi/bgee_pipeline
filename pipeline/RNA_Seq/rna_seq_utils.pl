@@ -565,7 +565,9 @@ sub getExcludedLibraries {
 
     for my $line ( read_file("$excludedLibraryFile", chomp=>1) ){
         next  if ( $line =~ /^#/ or $line =~ /^\"#/ or $line =~ /^$/ );
+        print "$line\n";
         my @tmp = map { bgeeTrim($_) } map { s/^\"//; s/\"$//; $_ } split(/\t/, $line);
+        print "$tmp[1]\n";
         if ( $tmp[1] eq 'TRUE' ){
             $excludedLibraries{$tmp[0]} = $tmp[2];
         }
@@ -596,7 +598,7 @@ sub getAllRnaSeqLibrariesStats {
         my $sdIntergenic                    = $tmp[13];
         my $speciesId                       = $tmp[14];
 
-        die "tsv field number problem [$line]\n"  if ( scalar @tmp != 18 );
+        die "tsv field number problem [$line]\n"  if ( scalar @tmp != 15 );
 
         if ( !defined $rnaSeqLibraries{$libraryId} ){
             # Perform format checks
@@ -779,11 +781,11 @@ sub getGenesResults {
                 warn "Warning, wrong format for biotype [$biotype]\n";
                 $discarded = 1;
             }
-            if ( $zscore !~ /$floatingPointRegex/ || $zscore ne "NA"){
+            if ( !($zscore =~ /$floatingPointRegex/ || $zscore eq 'NA')){
                 warn "Warning, wrong format for zscore [$zscore]\n";
                 $discarded = 1;
             }
-            if ( $pValue !~ /$floatingPointRegex/ || $pValue < 0 || $pValue > 1 || $pvalue ne "NA"){
+            if ( !( $pValue eq 'NA' || ($pValue =~ /$floatingPointRegex/ && $pValue >= 0 && $pValue <= 1) ) ){
                 warn "Warning, wrong format for pValue [$pValue]\n";
                 $discarded = 1;
             }

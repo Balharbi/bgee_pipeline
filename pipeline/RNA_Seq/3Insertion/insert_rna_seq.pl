@@ -265,7 +265,7 @@ my $insResult = $bgee->prepare('INSERT INTO rnaSeqResult (rnaSeqLibraryId, bgeeG
                                 readsCount, pValue, zScore, detectionFlag, reasonForExclusion)
                                 VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?)');
 
-#my $inserted = 0;
+my $inserted = 0;
 for my $expId ( sort keys %libraries ){
     LIBRARY:
     for my $libraryId ( sort keys %{$libraries{$expId}} ){
@@ -356,7 +356,6 @@ for my $expId ( sort keys %libraries ){
 
         # insert genes results
         my %genesResults = getGenesResults("$all_results/$libraryId/$abundance_file");
-        print
         for my $geneId ( keys %genesResults ){
             $inserted++;
             # Note: pre-filtering exclusion is now managed in the script insert_rna_seq_expression.pl,
